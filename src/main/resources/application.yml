@@ -1,6 +1,6 @@
 spring:
   application:
-    name: msavaliacao-credito
+    name: msavaliadorcredito
   jpa:
     show-sql: true
     generate-ddl: true
@@ -14,4 +14,3 @@ eureka:
       defaultZone: http://localhost:8761/eureka
   instance:
     instance-id: ${spring.application.name}:${ spring.application.instance_id:${random.value} }
-

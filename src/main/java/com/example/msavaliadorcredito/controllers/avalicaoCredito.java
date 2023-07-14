@@ -1,12 +1,11 @@
-package com.example.msavaliacaocredito.controllers;
+package com.example.msavaliadorcredito.controllers;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/avaliacao-credito")
+@RequestMapping("/avaliador-credito")
 public class avalicaoCredito {
 
     @GetMapping

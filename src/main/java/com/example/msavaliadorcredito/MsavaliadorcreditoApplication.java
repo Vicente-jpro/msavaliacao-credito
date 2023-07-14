@@ -1,4 +1,4 @@
-package com.example.msavaliacaocredito;
+package com.example.msavaliadorcredito;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,10 +6,10 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
 @SpringBootApplication
 @EnableEurekaClient
-public class MsavaliacaoCreditoApplication {
+public class MsavaliadorcreditoApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MsavaliacaoCreditoApplication.class, args);
+		SpringApplication.run(MsavaliadorcreditoApplication.class, args);
 	}
 
 }
