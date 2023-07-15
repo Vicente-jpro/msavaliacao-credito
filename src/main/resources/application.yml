@@ -6,7 +6,7 @@ spring:
     generate-ddl: true
 
 server:
-  port: 9000 #Generate random port
+  port: 3000 #Generate random port
 
 eureka:
   client:
