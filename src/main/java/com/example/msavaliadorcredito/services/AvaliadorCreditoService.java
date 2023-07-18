@@ -2,6 +2,8 @@ package com.example.msavaliadorcredito.services;
 
 import org.springframework.stereotype.Service;
 
+import com.example.msavaliadorcredito.clients.ClienteResourceClient;
+import com.example.msavaliadorcredito.models.msclientes.DadosCliente;
 import com.example.msavaliadorcredito.models.msclientes.SituacaoCliente;
 
 import lombok.RequiredArgsConstructor;
@@ -10,9 +12,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AvaliadorCreditoService {
 
-    public SituacaoCliente getSituacaoClienteByBi(String bi){
+    private final ClienteResourceClient clienteResourceClient;
+
+    public SituacaoCliente getSituacaoClienteByBi(String bi) {
         // Obter os dados do cliente - MSCliente
+        DadosCliente dadosCliente = this.clienteResourceClient.getClienteByBi(bi);
         // Obter cartoes do cliente - MSCartoes
-        return 
+        return SituacaoCliente
+                .builder()
+                .cliente(dadosCliente)
+                .build();
     }
 }

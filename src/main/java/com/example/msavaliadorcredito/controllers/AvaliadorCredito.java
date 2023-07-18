@@ -33,6 +33,7 @@ public class AvaliadorCredito {
     @GetMapping(value = "/situacao-cliente", params = "bi")
     @ResponseStatus(HttpStatus.OK)
     public SituacaoCliente situacaoCliente(@RequestParam("bi") String bi) {
+        logger.info("** Buscando a situação do cliente pelo BI: " + bi);
         return this.avaliadorCreditoService.getSituacaoClienteByBi(bi);
     }
 
