@@ -2,6 +2,8 @@ package com.example.msavaliadorcredito.models.msclientes;
 
 import java.util.List;
 
+import com.example.msavaliadorcredito.models.mscartoes.CartaoCliente;
+
 import lombok.Builder;
 import lombok.Data;
 

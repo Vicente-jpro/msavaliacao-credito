@@ -10,6 +10,6 @@ import com.example.msavaliadorcredito.models.msclientes.DadosCliente;
 public interface ClienteResourceClient {
 
     @GetMapping(params = "bi")
-    public DadosCliente getClienteByBi(@RequestParam("bi") String bi);
+    DadosCliente getClienteByBi(@RequestParam("bi") String bi);
 
 }
