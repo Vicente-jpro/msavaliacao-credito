@@ -29,7 +29,7 @@ public class AvaliadorCreditoService {
 
         logger.info("Consultando o CARTAO_CLIENTE com BI: " + bi);
         List<CartaoCliente> cartaoCliente = this.cartaoClienteResourceClient.getCartaoClienteByBi(bi);
-        int i = 1 + 3;
+
         // Obter cartoes do cliente - MSCartoes
         return SituacaoCliente
                 .builder()

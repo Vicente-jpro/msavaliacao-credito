@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.msavaliadorcredito.models.mscartoes.CartaoCliente;
 
-@FeignClient(name = "mscartoes", path = "/cartoes")
+@FeignClient(name = "mscartoes", path = "/cartoes/clientes")
 public interface CartaoClienteResourceClient {
 
     @GetMapping(params = "bi")
