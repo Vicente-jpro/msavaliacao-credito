@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.msavaliadorcredito.exeptions.DadosClienteNotFoundException;
 import com.example.msavaliadorcredito.models.msclientes.SituacaoCliente;
 import com.example.msavaliadorcredito.services.AvaliadorCreditoService;
 
@@ -34,7 +35,17 @@ public class AvaliadorCredito {
     @ResponseStatus(HttpStatus.OK)
     public SituacaoCliente situacaoCliente(@RequestParam("bi") String bi) {
         logger.info("** Buscando a situação do cliente pelo BI: " + bi);
-        return this.avaliadorCreditoService.getSituacaoClienteByBi(bi);
+
+        SituacaoCliente situacaoCliente = null;
+
+        try {
+
+            situacaoCliente = this.avaliadorCreditoService.getSituacaoClienteByBi(bi);
+
+        } catch (DadosClienteNotFoundException e) {
+            e.printStackTrace();
+        }
+        return situacaoCliente;
     }
 
 }
