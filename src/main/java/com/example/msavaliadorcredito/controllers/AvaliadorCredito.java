@@ -44,6 +44,8 @@ public class AvaliadorCredito {
 
         } catch (DadosClienteNotFoundException e) {
             e.printStackTrace();
+            throw new DadosClienteNotFoundException(
+                    "Cliente não encontrado", e.getStatus());
         }
         return situacaoCliente;
     }
