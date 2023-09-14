@@ -10,4 +10,5 @@ public class DadosCliente {
     private Integer idCliente;
     private String nome;
     private String bi;
+    private Integer idade;
 }

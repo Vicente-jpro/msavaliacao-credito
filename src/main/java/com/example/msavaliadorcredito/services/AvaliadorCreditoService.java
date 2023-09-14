@@ -1,7 +1,9 @@
 package com.example.msavaliadorcredito.services;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.apache.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,9 @@ import com.example.msavaliadorcredito.clients.ClienteResourceClient;
 import com.example.msavaliadorcredito.controllers.AvaliadorCredito;
 import com.example.msavaliadorcredito.exeptions.DadosClienteNotFoundException;
 import com.example.msavaliadorcredito.exeptions.ErroComunicacaoException;
+import com.example.msavaliadorcredito.models.AvaliacaoCliente;
+import com.example.msavaliadorcredito.models.CartaoAprovado;
+import com.example.msavaliadorcredito.models.mscartoes.Cartao;
 import com.example.msavaliadorcredito.models.mscartoes.CartaoCliente;
 import com.example.msavaliadorcredito.models.msclientes.DadosCliente;
 import com.example.msavaliadorcredito.models.msclientes.SituacaoCliente;
@@ -43,6 +48,46 @@ public class AvaliadorCreditoService {
                     .listaCartores(cartaoCliente)
                     .build();
 
+        } catch (FeignException.FeignClientException e) {
+            int status = e.status();
+
+            if (HttpStatus.SC_NOT_FOUND == status) {
+                throw new DadosClienteNotFoundException(
+                        "Não encontrado. BI:" + bi, status);
+            }
+            throw new ErroComunicacaoException(e.getMessage(), status);
+        }
+
+    }
+
+    public AvaliacaoCliente realizarValicaoCliente(String bi, Long renda)
+            throws DadosClienteNotFoundException, ErroComunicacaoException {
+
+        logger.info("Realizando avalicação de cliente");
+        try {
+            DadosCliente dadosClienteResponse = this.clienteResourceClient.getClienteByBi(bi);
+            List<Cartao> cartaosResponse = this.cartaoClienteResourceClient.getCartoesRendaMenorOrIgual(renda);
+
+            List<CartaoAprovado> cartoes = cartaosResponse
+                    .stream()
+                    .map(cartao -> {
+
+                        BigDecimal limiteBasico = cartao.getLimiteBasico();
+                        BigDecimal idadeBigDecimal = BigDecimal.valueOf(dadosClienteResponse.getIdade());
+                        BigDecimal resultadoRendaDivisao = idadeBigDecimal.divide(BigDecimal.valueOf(10));
+                        BigDecimal limiteAprovado = resultadoRendaDivisao.multiply(limiteBasico);
+
+                        CartaoAprovado cartaoAprovado = new CartaoAprovado();
+
+                        cartaoAprovado.setCartao(cartao.getNome());
+                        cartaoAprovado.setBandeira(cartao.getBandeiraCartao().name());
+                        cartaoAprovado.setLimiteAprovado(limiteAprovado);
+
+                        return cartaoAprovado;
+
+                    }).collect(Collectors.toList());
+
+            return new AvaliacaoCliente(cartoes);
         } catch (FeignException.FeignClientException e) {
             int status = e.status();
 

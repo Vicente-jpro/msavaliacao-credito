@@ -4,12 +4,16 @@ import java.util.logging.Logger;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.msavaliadorcredito.exeptions.DadosClienteNotFoundException;
+import com.example.msavaliadorcredito.models.AvaliacaoCliente;
+import com.example.msavaliadorcredito.models.DadosAvaliacao;
 import com.example.msavaliadorcredito.models.msclientes.SituacaoCliente;
 import com.example.msavaliadorcredito.services.AvaliadorCreditoService;
 
@@ -48,6 +52,27 @@ public class AvaliadorCredito {
                     "Cliente não encontrado", e.getStatus());
         }
         return situacaoCliente;
+    }
+
+    @PostMapping
+    public AvaliacaoCliente realizarValicaoCliente(@RequestBody DadosAvaliacao dadosAvaliacao) {
+        logger.info("Realizar avaliação cliente");
+
+        AvaliacaoCliente avaliacaoCliente = null;
+
+        try {
+
+            avaliacaoCliente = this.avaliadorCreditoService.realizarValicaoCliente(
+                    dadosAvaliacao.getBi(),
+                    dadosAvaliacao.getRenda());
+
+        } catch (DadosClienteNotFoundException e) {
+            e.printStackTrace();
+            throw new DadosClienteNotFoundException(
+                    "Cliente não encontrado", e.getStatus());
+        }
+
+        return avaliacaoCliente;
     }
 
 }
