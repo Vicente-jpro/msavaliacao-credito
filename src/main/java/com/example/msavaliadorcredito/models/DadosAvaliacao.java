@@ -1,7 +1,5 @@
 package com.example.msavaliadorcredito.models;
 
-import java.math.BigDecimal;
-
 import lombok.Builder;
 import lombok.Data;
 
