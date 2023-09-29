@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.example.msavaliadorcredito.exeptions.DadosClienteNotFoundException;
 import com.example.msavaliadorcredito.exeptions.ErroComunicacaoException;
+import com.example.msavaliadorcredito.exeptions.ErroSolicitacaoCartaoException;
 import com.example.msavaliadorcredito.utils.ApiErrors;
 
 @RestControllerAdvice
@@ -25,6 +26,14 @@ public class ApplicationControllerAdvice {
 	@ExceptionHandler(DadosClienteNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public ApiErrors dadosInvalidoExceptionHandle(DadosClienteNotFoundException ex) {
+		this.mensagemErro = ex.getMessage();
+		return new ApiErrors(mensagemErro);
+	}
+
+	@ResponseBody
+	@ExceptionHandler(ErroSolicitacaoCartaoException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public ApiErrors erroSolicitacaoCartaoExceptionHandle(ErroSolicitacaoCartaoException ex) {
 		this.mensagemErro = ex.getMessage();
 		return new ApiErrors(mensagemErro);
 	}

@@ -1,4 +1,4 @@
-package com.example.infra.queues;
+package com.example.msavaliadorcredito.infra.queues;
 
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

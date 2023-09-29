@@ -1,10 +1,9 @@
-package com.example.config;
+package com.example.msavaliadorcredito.config;
 
 import org.springframework.amqp.core.Queue;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import com.example.msavaliadorcredito.models.mscartoes.DadosSolicitacaoEmissaoCartao;
 
 /***
  * 
@@ -15,6 +14,7 @@ public class MQconfig {
     @Value("${mq.queues.emissao-cartoes}")
     private String emissaoCartoesFila;
 
+    @Bean
     public Queue queueEmissaCartoes() {
         return new Queue(emissaoCartoesFila, true);
     }

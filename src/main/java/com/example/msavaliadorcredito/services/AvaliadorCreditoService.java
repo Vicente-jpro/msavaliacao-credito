@@ -2,21 +2,26 @@ package com.example.msavaliadorcredito.services;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.apache.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.example.msavaliadorcredito.infra.queues.EmissaoCartaoPublisher;
 import com.example.msavaliadorcredito.clients.CartaoClienteResourceClient;
 import com.example.msavaliadorcredito.clients.ClienteResourceClient;
-import com.example.msavaliadorcredito.controllers.AvaliadorCredito;
+import com.example.msavaliadorcredito.controllers.AvaliadorCreditoController;
 import com.example.msavaliadorcredito.exeptions.DadosClienteNotFoundException;
 import com.example.msavaliadorcredito.exeptions.ErroComunicacaoException;
+import com.example.msavaliadorcredito.exeptions.ErroSolicitacaoCartaoException;
 import com.example.msavaliadorcredito.models.AvaliacaoCliente;
 import com.example.msavaliadorcredito.models.CartaoAprovado;
 import com.example.msavaliadorcredito.models.mscartoes.Cartao;
 import com.example.msavaliadorcredito.models.mscartoes.CartaoCliente;
+import com.example.msavaliadorcredito.models.mscartoes.DadosSolicitacaoEmissaoCartao;
+import com.example.msavaliadorcredito.models.mscartoes.ProtocoloSolicitacaoCartao;
 import com.example.msavaliadorcredito.models.msclientes.DadosCliente;
 import com.example.msavaliadorcredito.models.msclientes.SituacaoCliente;
 
@@ -26,10 +31,11 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class AvaliadorCreditoService {
-    private final Logger logger = Logger.getLogger(AvaliadorCredito.class.getName());
+    private final Logger logger = Logger.getLogger(AvaliadorCreditoController.class.getName());
     private final ClienteResourceClient clienteResourceClient;
 
     private final CartaoClienteResourceClient cartaoClienteResourceClient;
+    private final EmissaoCartaoPublisher emissaoCartaoPublisher;
 
     public SituacaoCliente getSituacaoClienteByBi(String bi)
             throws DadosClienteNotFoundException, ErroComunicacaoException {
@@ -98,5 +104,15 @@ public class AvaliadorCreditoService {
             throw new ErroComunicacaoException(e.getMessage(), status);
         }
 
+    }
+
+    public ProtocoloSolicitacaoCartao solicitarEmissaoCartao(DadosSolicitacaoEmissaoCartao dados) {
+        try {
+            emissaoCartaoPublisher.solicitar(dados);
+            String protolo = UUID.randomUUID().toString();
+            return new ProtocoloSolicitacaoCartao(protolo);
+        } catch (Exception e) {
+            throw new ErroSolicitacaoCartaoException(e.getMessage());
+        }
     }
 }

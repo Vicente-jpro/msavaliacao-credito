@@ -3,6 +3,7 @@ package com.example.msavaliadorcredito.controllers;
 import java.util.logging.Logger;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,9 +12,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.msavaliadorcredito.infra.queues.EmissaoCartaoPublisher;
 import com.example.msavaliadorcredito.exeptions.DadosClienteNotFoundException;
+import com.example.msavaliadorcredito.exeptions.ErroSolicitacaoCartaoException;
 import com.example.msavaliadorcredito.models.AvaliacaoCliente;
 import com.example.msavaliadorcredito.models.DadosAvaliacao;
+import com.example.msavaliadorcredito.models.mscartoes.DadosSolicitacaoEmissaoCartao;
+import com.example.msavaliadorcredito.models.mscartoes.ProtocoloSolicitacaoCartao;
 import com.example.msavaliadorcredito.models.msclientes.SituacaoCliente;
 import com.example.msavaliadorcredito.services.AvaliadorCreditoService;
 
@@ -22,9 +27,9 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/avaliador-credito")
 @RequiredArgsConstructor
-public class AvaliadorCredito {
+public class AvaliadorCreditoController {
 
-    private final Logger logger = Logger.getLogger(AvaliadorCredito.class.getName());
+    private final Logger logger = Logger.getLogger(AvaliadorCreditoController.class.getName());
 
     private final AvaliadorCreditoService avaliadorCreditoService;
 
@@ -73,6 +78,19 @@ public class AvaliadorCredito {
         }
 
         return avaliacaoCliente;
+    }
+
+    @PostMapping("/solicitacao-cartao")
+    public ResponseEntity solicitarCartao(
+            @RequestBody DadosSolicitacaoEmissaoCartao dados) {
+        try {
+            ProtocoloSolicitacaoCartao protocoloSolicitacaoCartao = avaliadorCreditoService
+                    .solicitarEmissaoCartao(dados);
+
+            return ResponseEntity.ok(protocoloSolicitacaoCartao);
+        } catch (ErroSolicitacaoCartaoException e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
     }
 
 }
