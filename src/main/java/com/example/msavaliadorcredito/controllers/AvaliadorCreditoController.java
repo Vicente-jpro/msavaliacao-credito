@@ -83,12 +83,14 @@ public class AvaliadorCreditoController {
     @PostMapping("/solicitacao-cartao")
     public ResponseEntity solicitarCartao(
             @RequestBody DadosSolicitacaoEmissaoCartao dados) {
+        logger.info("Solicitar cartão.");
         try {
             ProtocoloSolicitacaoCartao protocoloSolicitacaoCartao = avaliadorCreditoService
                     .solicitarEmissaoCartao(dados);
 
             return ResponseEntity.ok(protocoloSolicitacaoCartao);
         } catch (ErroSolicitacaoCartaoException e) {
+            logger.info("Erro ao solicitar cartão, erro no servidor: " + e.getMessage());
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }

@@ -107,11 +107,14 @@ public class AvaliadorCreditoService {
     }
 
     public ProtocoloSolicitacaoCartao solicitarEmissaoCartao(DadosSolicitacaoEmissaoCartao dados) {
+        logger.info("Solicitando cartão: ");
+
         try {
             emissaoCartaoPublisher.solicitar(dados);
             String protolo = UUID.randomUUID().toString();
             return new ProtocoloSolicitacaoCartao(protolo);
         } catch (Exception e) {
+            logger.info("Erro ao solicitar cartão: ");
             throw new ErroSolicitacaoCartaoException(e.getMessage());
         }
     }
